@@ -13,7 +13,6 @@ var APP = function() {
 
 
 APP.prototype.init = function() {
-  console.log('init');
   this.here = { name: null, lat: null, lng: null, temp_f: null }
   this.there = { name: null, lat: null, lng: null, temp_f: null }
   this.geocoder = new google.maps.Geocoder();
@@ -57,7 +56,6 @@ APP.prototype.init = function() {
 
 
 APP.prototype.say = function(str_1, str_2) {
-  console.log('SAY', new Date().getTime(), str_1, str_2);
   if (str_1 !== null) {
     $('#notify').stop().fadeOut(this.ANIMATION_SPEED, function() {
       $('#notify').html(str_1).fadeIn(this.ANIMATION_SPEED);
@@ -78,13 +76,11 @@ APP.prototype.say = function(str_1, str_2) {
 
 
 APP.prototype.askThere = function() {
-  console.log('askThere');
   this.say('Enter a location below', '');
 };
 
 
 APP.prototype.askHere = function() {
-  console.log('askHere', new Date().getTime());
   if (this.here && this.here.temp_f) {
     // Already have it.
     return;
@@ -110,7 +106,6 @@ APP.prototype.askHere = function() {
 
 
 APP.prototype.tryReport = function() {
-  console.log('tryReport');
   if (!this.here || this.here.temp_f === null) {
     return;
   }
@@ -147,12 +142,10 @@ APP.prototype.tryReport = function() {
 
 
 APP.prototype.getLatLng = function(loc) {
-  console.log('getLatLng', loc);
   this.geocoder.geocode(
       { 'address': loc.name },
       (function(app) {
         return function(results, status) {
-          console.log('geocode response');
           if (status === google.maps.GeocoderStatus.OK) {
             var latlng = results[0].geometry.location;
             loc.lat = latlng.lat();
@@ -169,7 +162,6 @@ APP.prototype.getLatLng = function(loc) {
 
 
 APP.prototype.getTemperature = function(loc) {
-  console.log('getTemperature', loc);
   if (!loc.lat || !loc.lng) {
     this.getLatLng(loc);
     return;
@@ -199,7 +191,6 @@ APP.prototype.getTemperature = function(loc) {
 
 $(document).ready(function(){
   var app = new APP();
-  console.log(app);
   app.init();
 });
 
