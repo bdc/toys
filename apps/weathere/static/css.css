@@ -1,0 +1,45 @@
+body {
+  background: #dddddd;
+}
+
+#notify {
+  margin-top: 310px;
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  word-spacing: 10px;
+  letter-spacing: -1px;
+  font-weight: 300;
+  font-size: 40px;
+  text-transform: uppercase;
+}
+
+#location {
+  margin-top: 50px;
+  text-align: center;
+}
+
+#location input {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 20px;
+  text-transform: uppercase;
+}
+
+#location input {
+  width : 500px;
+}
+
+temperature {
+  font-weight: 700;
+  font-size: 60px;
+}
+
+warmer {
+  color: red;
+}
+
+colder {
+  color: blue;
+}
+
+
