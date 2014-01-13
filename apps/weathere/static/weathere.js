@@ -13,6 +13,7 @@ var APP = function() {
 
 
 APP.prototype.init = function() {
+  console.log('init');
   this.here = { name: null, lat: null, lng: null, temp_f: null }
   this.there = { name: null, lat: null, lng: null, temp_f: null }
   this.geocoder = new google.maps.Geocoder();
@@ -56,6 +57,7 @@ APP.prototype.init = function() {
 
 
 APP.prototype.say = function(str_1, str_2) {
+  console.log('SAY', new Date().getTime(), str_1, str_2);
   if (str_1 !== null) {
     $('#notify').stop().fadeOut(this.ANIMATION_SPEED, function() {
       $('#notify').html(str_1).fadeIn(this.ANIMATION_SPEED);
@@ -76,14 +78,25 @@ APP.prototype.say = function(str_1, str_2) {
 
 
 APP.prototype.askThere = function() {
+  console.log('askThere');
   this.say('Enter a location below', '');
 };
 
 
 APP.prototype.askHere = function() {
-  this.say('Click to allow your browser to share your location', null);
+  console.log('askHere', new Date().getTime());
+  if (this.here && this.here.temp_f) {
+    // Already have it.
+    return;
+  }
+  ask_timer = window.setTimeout((function(app) {
+    return function() {
+      app.say('Click to allow your browser to share your location', null);
+    };
+  })(this), 1000);
   navigator.geolocation.getCurrentPosition((function(app) {
     return function(rsp) {
+      window.clearTimeout(ask_timer);
       app.here = {
         name: null,
         lat: rsp.coords.latitude,
@@ -91,18 +104,13 @@ APP.prototype.askHere = function() {
         temp_f: null
       };
       app.getTemperature(app.here);
-      if (!app.there) {
-        app.say('Enter a location below', '');
-      }
-      else {
-        app.say('Wait...', null);
-      }
     };
   })(this));
 };
 
 
 APP.prototype.tryReport = function() {
+  console.log('tryReport');
   if (!this.here || this.here.temp_f === null) {
     return;
   }
@@ -139,10 +147,12 @@ APP.prototype.tryReport = function() {
 
 
 APP.prototype.getLatLng = function(loc) {
+  console.log('getLatLng', loc);
   this.geocoder.geocode(
       { 'address': loc.name },
       (function(app) {
         return function(results, status) {
+          console.log('geocode response');
           if (status === google.maps.GeocoderStatus.OK) {
             var latlng = results[0].geometry.location;
             loc.lat = latlng.lat();
@@ -150,6 +160,7 @@ APP.prototype.getLatLng = function(loc) {
             app.getTemperature(loc);
           }
           else {
+            app.there = null;
             app.say('Are you sure that\'s a real place?', 'Try again, smartass');
           }
         };
@@ -158,11 +169,15 @@ APP.prototype.getLatLng = function(loc) {
 
 
 APP.prototype.getTemperature = function(loc) {
+  console.log('getTemperature', loc);
   if (!loc.lat || !loc.lng) {
     this.getLatLng(loc);
     return;
   }
 
+  if (this.here.lat && this.there.lat) {
+    this.say('Wait...', null);
+  }
   $.ajax({
     url: '/' + this.APP_NAME + '/q/temperature',
     data: { lat: loc.lat, lng: loc.lng },
@@ -171,7 +186,7 @@ APP.prototype.getTemperature = function(loc) {
   }).done((function(app) {
     return function(rsp) {
       if (rsp.error) {
-        // TODO handle error cases
+        app.say('We seem to have found a corner case.', 'Ever onward');
       }
       loc.lat = rsp.lat;
       loc.lng = rsp.lng;
@@ -184,6 +199,7 @@ APP.prototype.getTemperature = function(loc) {
 
 $(document).ready(function(){
   var app = new APP();
+  console.log(app);
   app.init();
 });
 

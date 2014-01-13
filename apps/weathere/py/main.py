@@ -31,7 +31,10 @@ class HtmlHandler(webapp2.RequestHandler):
 
 class StaticHandler(webapp2.RequestHandler):
   def get(self, filename):
-    self.response.headers['Content-Type'] = 'text/html'
+    if filename.endswith('.js'):
+      self.response.headers['Content-Type'] = 'application/javascript'
+    if filename.endswith('.css'):
+      self.response.headers['Content-Type'] = 'text/css'
     rsp = JINJA_ENV.get_template(filename).render({
       'APP_ROOT': config.APP_ROOT,
       })
@@ -71,5 +74,5 @@ application = webapp2.WSGIApplication([
   webapp2.Route(config.APP_ROOT+'/s/<filename>', handler=StaticHandler),
   webapp2.Route(config.APP_ROOT+'/q/temperature', handler=AjaxHandler),
   webapp2.Route(config.APP_ROOT+'/<location>', handler=HtmlHandler),
-  ], debug=True)
+  ])
 
