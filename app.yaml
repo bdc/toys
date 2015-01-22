@@ -16,4 +16,9 @@ handlers:
 - url: /weathere\b.*
   script: apps.weathere.py.main.application
 
+# Memory Doc Demo
+- url: /memorydoc/img/
+  static_dir: apps/memorydoc/img/
+- url: /memorydoc\b.*
+  script: apps.memorydoc.py.main.application
 

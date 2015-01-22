@@ -1,0 +1,23 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,700"/>
+  <link rel="stylesheet" type="text/css" href="{{ APP_ROOT }}/s/css.css"/>
+  <script type="text/javascript">
+    var _get = {
+      {% for js_var in js_vars %}
+      {{ js_var.name }}: "{{ js_var.val }}",
+      {% endfor %}
+    };
+  </script>
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ APP_ROOT }}/s/js.js"></script>
+</head>
+<body>
+
+
+
+</body>
+</html>
+
+
+

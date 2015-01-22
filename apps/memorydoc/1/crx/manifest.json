@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+  "name": "Memory Doc Demo",
+  "description": "A demo for the Memory Document concept, which runs in the context of English-language Wikipedia articles.",
+  "version": "0.1",
+  "permissions": [],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://en.wikipedia.org/wiki/*"
+      ],
+      "js": [
+        "app.js"
+      ]
+    }
+  ]
+}
